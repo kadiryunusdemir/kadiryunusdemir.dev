@@ -1,21 +1,26 @@
 ---
+const pageTitle = "Home";
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>kyd.dev</title>
-	</head>
-	<body>
-		<a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/blog/">Blog</a>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a href="/">Home</a>
+    <a href="/about/">About</a>
+    <a href="/blog/">Blog</a>
 
-		<h1>This site is under development with Astro.</h1>
+    <h1>{pageTitle}</h1>
+    <h2>This site is under development with Astro.</h2>
 
-		<p>This site will update as I complete more features, so keep checking back and see how my journey is going!</p>
-	</body>
+    <p>
+      This site will update as I complete more features, so keep checking back
+      and see how my journey is going!
+    </p>
+  </body>
 </html>
