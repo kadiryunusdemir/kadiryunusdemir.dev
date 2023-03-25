@@ -1,0 +1,18 @@
+---
+const username = "kadiryunusdemir";
+
+import Social from "./Social.astro";
+---
+
+<style>
+  footer {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+</style>
+
+<footer>
+  <Social platform="linkedin" username={`in/${username}`} />
+  <Social platform="github" username={`${username}`} />
+</footer>
