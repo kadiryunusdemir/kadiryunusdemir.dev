@@ -8,7 +8,7 @@ tags: ["asp.net-core", "asp.net6", ".net6"]
 ---
 ## Using Service Filters for Exception Handling
 
-Service Filters use the ServiceProvider to resolve the instance of the filter. They need to be registered with the container and provide control over the lifecycle.
+Service Filters use the `ServiceProvider` to resolve the instance of the filter. They need to be registered with the container and provide control over the lifecycle.
 
 *`program.cs:`*
 ```csharp
@@ -17,7 +17,7 @@ builder.Services.AddScoped<ViewExceptionFilter>();
 builder.Services.AddControllersWithViews(config =>
 {
     config.Filters.AddService(typeof(ViewExceptionFilter));
-})
+});
 ```
 *`an action method:`*
 ```csharp
@@ -25,7 +25,7 @@ public OperationResult ActionMethod(int id)
 ```
 
 ## Using Service Filters for Exception Handling
-Type Filters are instantiated by ObjectFactory and do not require registration as a service. Their lifetime is limited to the duration of an HTTP request.
+Type Filters are instantiated by `ObjectFactory` and do not require registration as a service. Their lifetime is limited to the duration of an HTTP request.
 
 *`an action method:`*
 ```csharp
