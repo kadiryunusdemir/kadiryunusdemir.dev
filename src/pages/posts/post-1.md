@@ -1,40 +1,28 @@
 ---
 layout: ../../layouts/MarkdownPostLayout.astro
-title: 'Exception Filters in ASP.NET Core'
-pubDate: 2023-09-18
-description: 'Learn how to use exception filters with dependency injection for effective error handling in ASP.NET Core.'
-author: 'Kadir Yunus Demir'
-tags: ["asp.net-core", "asp.net6", ".net6"]
+title: 'My First Blog Post'
+pubDate: 2022-07-01
+description: 'This is the first post of my new Astro blog.'
+author: 'Astro Learner'
+image:
+    url: 'https://astro.build/og/astro.jpg' 
+    alt: 'The Astro mascot.'
+tags: ["astro", "blogging", "learning in public"]
 ---
-# Exception Filters in ASP.NET Core
+Welcome to my _new blog_ about learning Astro! Here, I will share my learning journey as I build a new website.
 
-Exception filters are a powerful feature in ASP.NET Core that allow you to handle exceptions in a central way and reduces written code.
+## What I've accomplished
 
-## Using Service Filters for Exception Handling
+1. **Installing Astro**: First, I created a new Astro project and set up my online accounts.
 
-Service Filters use the ServiceProvider to resolve the instance of the filter. They need to be registered with the container and provide control over the lifecycle.
+2. **Making Pages**: I then learned how to make pages by creating new `.astro` files and placing them in the `src/pages/` folder.
 
-*In `program.cs`:*
-```csharp
-builder.Services.AddScoped<ViewExceptionFilter>();
+3. **Making Blog Posts**: This is my first blog post! I now have Astro pages and Markdown posts!
 
-builder.Services.AddControllersWithViews(config =>
-{
-    config.Filters.AddService(typeof(ViewExceptionFilter));
-})
-```
-*In an `action method``:*
-```csharp
-public OperationResult ActionMethod(int id)
-```
+## What's next
 
-## Using Service Filters for Exception Handling
-Type Filters are instantiated by ObjectFactory and do not require registration as a service. Their lifetime is limited to the duration of an HTTP request.
+I will finish the Astro tutorial, and then keep adding more posts. Watch this space for more to come.
 
-*In an action method:*
-```csharp
-[TypeFilter(typeof(JsonExceptionFilter))]
-public OperationResult ActionMethod(int id)
-```
+## Community
 
-[more reading](https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/filters?view=aspnetcore-6.0)
+It wasn't always smooth sailing, but I'm enjoying building with Astro. And, the [Discord community](https://astro.build/chat) is really friendly and helpful!
