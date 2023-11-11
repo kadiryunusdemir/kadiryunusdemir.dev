@@ -1,1 +1,1 @@
-# Welcome
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2a449b6d-2120-4f2b-8cb5-e2555d1a38b7/deploy-status)](https://app.netlify.com/sites/kadiryunusdemir/deploys)
