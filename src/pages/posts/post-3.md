@@ -4,7 +4,6 @@ title: 'Dynamic SQL Query for Retrieving SQL Rows in ASP.NET Core'
 pubDate: 2023-09-24
 description: 'Learn how to retrieve generic objects from SQL Server using table names and object IDs in ASP.NET Core.'
 author: 'Kadir Yunus Demir'
-tags: ["asp.net-core", "asp.net6", ".net6", "SQL Server", "SqlQueryRaw", "FromSqlInterpolated", "ExecuteSqlRaw", "FOR JSON"]
 tags: [
     "ASP.NET Core",
     "ASP.NET-Core",
