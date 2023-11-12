@@ -5,6 +5,38 @@ pubDate: 2023-09-24
 description: 'Learn how to retrieve generic objects from SQL Server using table names and object IDs in ASP.NET Core.'
 author: 'Kadir Yunus Demir'
 tags: ["asp.net-core", "asp.net6", ".net6", "SQL Server", "SqlQueryRaw", "FromSqlInterpolated", "ExecuteSqlRaw", "FOR JSON"]
+tags: [
+    "ASP.NET Core",
+    "ASP.NET-Core",
+    "ASP.NET 6",
+    ".NET 6",
+    "Entity Framework Core 7",
+    "Entity Framework Core 6",
+    "EF CORE 7",
+    "EF CORE 6",
+    "SQL Server",
+    "MSSQL Server",
+    "SqlQueryRaw",
+    "FromSqlInterpolated",
+    "ExecuteSqlRaw",
+    "FOR JSON",
+    "Dynamic SQL Queries",
+    "Database Query Execution",
+    "Database Query Interpolation",
+    "SQL Query Execution",
+    "Database Query Optimization",
+    "SQL Server Optimization",
+    "Entity Framework Core",
+    "JSON Data Retrieval",
+    "SQL Injection Prevention",
+    "Stored Procedures",
+    "Database Table Names",
+    "Object IDs",
+    ".NET Development",
+    "Database Security",
+    "JSON Output"
+]
+
 ---
 If you've ever encountered a situation where you need to fetch generic objects from a SQL Server database using table names and object IDs in an ASP.NET Core application, you might have found it challenging, especially when working with Entity Framework Core.
 
