@@ -7,10 +7,9 @@ const identity = {
   firstName: "Kadir",
   country: "Turkiye",
   occupation: "Software Developer",
-  hobbies: ["movies", "drawing"],
 };
 
-const skills = ["Astro", "HTML", "CSS", "JavaScript", "Writing Docs"];
+const skills = ["Astro", "ASP.NET Core", "C#", "Unity", "Writing Docs"];
 
 const happy = true;
 const finished = false;
@@ -26,14 +25,6 @@ const finished = false;
     <li>
       I live in {identity.country} and I work as a {identity.occupation}.
     </li>
-    {
-      identity.hobbies.length >= 2 && (
-        <li>
-          Two of my hobbies are: {identity.hobbies[0]} and{" "}
-          {identity.hobbies[1]}
-        </li>
-      )
-    }
   </ul>
   <p>My skills are:</p>
   <ul>
