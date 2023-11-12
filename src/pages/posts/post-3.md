@@ -8,18 +8,15 @@ tags: ["asp.net-core", "asp.net6", ".net6", "SQL Server"]
 ---
 If you've ever encountered a situation where you need to fetch generic objects from a SQL Server database using table names and object IDs in an ASP.NET Core application, you might have found it challenging, especially when working with Entity Framework Core. 
 
-## The Challenge
+## Raw SQL Approach (Not Recommended)
+When opting for the Raw SQL Approach, it's crucial to be mindful of preventing SQL injection attacks, even if you don't use user-provided values in your queries. Here's a snippet from a controller demonstrating the approach:
 
-Up until Entity Framework Core 7, there was no built-in support for using the generic `SqlQueryRaw<T>` method for dynamic SQL queries. This made it tricky to construct queries for scalar, non-entity types. To work around this limitation, we can use two different different approaches. 
-
-## Raw SQL Approach
 *`inside a Controller:`*
 ```csharp
 [NonAction]
 private string RetrieveJsonFromTable(string tableName, int objectId)
 {
-    // Even if we don't use any user-provided values into a SQL query, 
-    // it is good to be mindful about preventing any potential SQL injection attacks. 
+    // Prevent any potential SQL injection attacks. 
     var tableNames = dbContext.Model.GetEntityTypes()
         .Select(t => t.GetSchemaQualifiedTableName())
         .Distinct();
@@ -39,7 +36,6 @@ private string RetrieveJsonFromTable(string tableName, int objectId)
     };
 
     string query = $"SELECT @ReturnValue = (SELECT * FROM {tableName} WHERE ObjectId = @ObjectId AND Deleted = 0 FOR JSON AUTO, INCLUDE_NULL_VALUES, WITHOUT_ARRAY_WRAPPER);";
-
     var result = dbContext.Database.ExecuteSqlRaw(query, returnParam, objectIdParam);
 
     return (string)returnParam.Value;
@@ -47,33 +43,120 @@ private string RetrieveJsonFromTable(string tableName, int objectId)
 ```
 
 ## Stored Procedure Approach
+The Stored Procedure Approach offers a more secure and powerful way to retrieve JSON data. You can benefit from the power of the database using stored procedure. Here's a code snippet from a controller showcasing this approach:
+
 *`inside a Controller:`*
 ```csharp
+/// <summary>
+/// Check if the provided schema and table name is valid and not vulnerable to SQL injection attack.
+/// </summary>
+/// <remarks>Table name format: schema.name</remarks>
+/// <param name="schemaAndTableName">schema.name</param>
+/// <returns>True if the table name is valid; otherwise, false</returns>
 [NonAction]
-private string RetrieveJsonFromTable(string tableName, int objectId)
+private bool IsSchemaAndTableNameValid(string schemaAndTableName)
 {
-    // Even if we don't use any user-provided values into a SQL query, 
-    // it is good to be mindful about preventing any potential SQL injection attacks. 
+    // Ensure the input is not empty
+    if (string.IsNullOrEmpty(schemaAndTableName))
+    {  
+        return false; 
+    }
+    
+    // Retrieve a list of schema-qualified table names from the database context
     var tableNames = dbContext.Model.GetEntityTypes()
         .Select(t => t.GetSchemaQualifiedTableName())
         .Distinct();
 
-    if (!tableNames.Contains(tableName))
+    // Check if the provided schema and table name exists in the database
+    return tableNames.Contains(schemaAndTableName);
+}
+
+/// <summary>
+/// Get JSON data from a specified table.
+/// </summary>
+/// <remarks>Table name format: schema.name</remarks>
+/// <param name="schemaAndTableName">schema.name</param>
+/// <returns>JSON data as a string or an error message</returns>
+[NonAction]
+private string GetJsonListData(string schemaAndTableName)
+{
+    if (!IsSchemaAndTableNameValid(schemaAndTableName))
     {
-        throw new ArgumentException("Invalid table name.", tableName);
+        return "Invalid table name: " + schemaAndTableName;
     }
 
-    SqlParameter tableNameParam = new SqlParameter("@TableName", tableName);
-    SqlParameter objectIdParam = new SqlParameter("@ObjectId", objectId);
-    
-    // SpGetJson is a keyless entity
-    var r = dbContext.SpGetJson.FromSqlRaw("EXEC [dbo].[spGetJson] @TableName, @ObjectId", tableNameParam, objectIdParam).AsEnumerable().FirstOrDefault();
-    
+    // Execute the stored procedure and retrieve the JSON list result
+    var response = dbContext.spGetDataAsJson
+        .FromSqlInterpolated($"EXEC [dbo].[spGetDataAsJson] {schemaAndTableName}, {schemaAndTableName.Split(".")[1]}")
+        .AsEnumerable()
+        .FirstOrDefault();
+    return response.JsonResult;
+
+    // spGetDataAsJson is a keyless entity which has only a string properpty named JsonResult
     // Equavelent in EF Core 7:
-    // dbContext.Database.SqlQuery<string>("EXEC spGetJson @startDate, @endDate", tableNameParam, objectIdParam);
-    
-    return r == null ? string.Empty : r.JsonString;        
+    // return dbContext.Database.SqlQuery<string>("EXEC [dbo].[spGetDataAsJson] @SchemaAndTableName, @TableName, @ObjectId", 
+    //     schemaAndTableName, schemaAndTableName.Split(".")[1], objectId);
 }
+
+/// <summary>
+/// Get JSON data for a specific object from a table.
+/// </summary>
+/// <remarks>Table name format: schema.name</remarks>
+/// <param name="schemaAndTableName">schema.name</param>
+/// <param name="objectId">The object identifier</param>
+/// <returns>JSON data as a string or an error message</returns>
+[NonAction]
+private string GetJsonData(string schemaAndTableName, int objectId)
+{
+    if (!IsSchemaAndTableNameValid(schemaAndTableName))
+    {
+        return "Invalid table name: " + schemaAndTableName;
+    }
+
+    // Execute the stored procedure with the object identifier and retrieve the JSON result
+    var response = dbContext.spGetDataAsJson
+        .FromSqlInterpolated($"EXEC [dbo].[spGetDataAsJson] {schemaAndTableName}, {schemaAndTableName.Split(".")[1]}, {objectId}")
+        .AsEnumerable()
+        .FirstOrDefault();
+    return response.JsonResult;
+}
+```
+
+*`inside the MSSQL Server:`*
+```sql
+CREATE PROCEDURE [dbo].[spGetDataAsJson]
+    @SchemaAndTableName NVARCHAR(500) = '',
+    @TableName NVARCHAR(500) = '',
+    @ObjectId INT = NULL
+AS
+BEGIN
+    DECLARE @query NVARCHAR(1000) = '';
+    DECLARE @columns NVARCHAR(1000) = '';
+
+    -- Retrieve the column names for the specified table
+    -- while excluding unnecessary columns (e.g., 'Deleted')
+    SELECT @columns = STRING_AGG(ISNULL(COLUMN_NAME, ' '), ',') 
+    FROM INFORMATION_SCHEMA.COLUMNS 
+    WHERE TABLE_NAME = @TableName AND COLUMN_NAME NOT IN ('Deleted')
+
+    -- Construct the dynamic SQL query for JSON data retrieval
+    SET @query = N'SELECT (SELECT ' + @columns +
+        ' FROM ' + @SchemaAndTableName +
+        ' WHERE Deleted = 0';
+
+    -- Append the condition for the object ID if provided 
+    -- (flexibility to return a list or a single result)
+    IF @ObjectId IS NOT NULL
+    BEGIN
+        SET @query = @query + ' AND ObjectId = ' + CONVERT(NVARCHAR(50), @ObjectId);
+    END
+
+    -- Complete the SQL query to return JSON data
+    SET @query = @query + ' FOR JSON AUTO, INCLUDE_NULL_VALUES) AS JsonResult';
+
+    -- Execute the dynamic SQL query
+    EXEC sp_executesql @query;
+END
 ```
 
 [more reading](https://learn.microsoft.com/en-us/ef/core/querying/sql-queries)
