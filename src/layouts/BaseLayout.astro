@@ -14,8 +14,8 @@ const { pageTitle } = Astro.props;
     <title>{pageTitle}</title>
     <ViewTransitions />
   </head>
-  <body>
-    <Header />
+  <body transition:animate="initial">
+    <Header transition:animate="none"/>
     <h1>{pageTitle}</h1>
     {/* HTML content to be rendered inside another component */}
     <slot /> 
