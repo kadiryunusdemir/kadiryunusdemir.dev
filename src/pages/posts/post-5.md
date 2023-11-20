@@ -6,13 +6,15 @@ description: 'Explore techniques for implementing cascaded dropdown lists in ASP
 author: 'Kadir Yunus Demir'
 tags: [
     "ASP.NET Core",
+    "ASP.NET 6",
+    ".NET 6",
     "Dropdown Lists",
+    "Cascaded Dropdown Lists",
+    "Dependent Dropdown Lists",
     "Entity Framework Core",
     "JavaScript",
     "C#",
     "Web Development",
-    "ASP.NET 6",
-    ".NET 6",
     "Select2",
     "jQuery"
 ]

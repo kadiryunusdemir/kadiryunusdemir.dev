@@ -4,7 +4,7 @@ title: 'Exception Filters in ASP.NET Core'
 pubDate: 2023-09-18
 description: 'Learn how to use exception filters with dependency injection for effective error handling in ASP.NET Core.'
 author: 'Kadir Yunus Demir'
-tags: ["asp.net-core", "asp.net6", ".net6"]
+tags: ["asp.net core", "asp.net 6", ".net 6", "exception filters", "dependency injection", "error handling", "Service Filters", "Type Filters", "ServiceProvider", "filter registration", "service registration", "object factory", "HTTP request", "controller filters", "ASP.NET Core filters", "filter lifecycle"]
 ---
 ## Using Service Filters for Exception Handling
 

@@ -4,7 +4,8 @@ title: 'URL Extension Methods in ASP.NET Core'
 pubDate: 2023-09-18
 description: 'Learn how to use extension methods for compile-time checked urls.'
 author: 'Kadir Yunus Demir'
-tags: ["asp.net-core", "asp.net6", ".net6"]
+tags: ["asp.net core", "asp.net 6", ".net 6", "iurlhelper", "urlhelper", "return url", "URL extension methods", "compile-time URL checks", "web development", "ASP.NET Core controllers", "extension methods", "URL generation", "runtime errors", "maintainable code"]
+
 ---
 When developing web applications, creating and managing URLs is a common task. However, manually constructing URLs can be error-prone, especially when referencing controllers and actions. Mistyped names or code changes can lead to broken links that may not be immediately apparent. Unfortunately, the provided methods offer no such help. To address this issue, it's essential to use compile-time checked methods for URL generation. 
 

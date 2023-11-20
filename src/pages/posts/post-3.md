@@ -6,7 +6,6 @@ description: 'Learn how to retrieve generic objects from SQL Server using table 
 author: 'Kadir Yunus Demir'
 tags: [
     "ASP.NET Core",
-    "ASP.NET-Core",
     "ASP.NET 6",
     ".NET 6",
     "Entity Framework Core 7",

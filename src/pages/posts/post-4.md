@@ -4,7 +4,8 @@ title: 'Creating a Whitespace Trimmer Model Binder in ASP.NET Core'
 pubDate: 2023-09-24
 description: 'Learn how to implement a custom model binder in ASP.NET Core to trim whitespace from user input.'
 author: 'Kadir Yunus Demir'
-tags: ["asp.net-core", "asp.net6", ".net6"]
+tags: ["asp.net core", "asp.net 6", ".net 6", "model binder", "model binder provider", "whitespace trimmer", "custom model binder", "data consistency", "user experience", "input validation", "data integrity", "data display", "search operations", "value provider", "ModelBindingContext", "ModelBinderProviderContext", "BinderTypeModelBinder", "validation filter"]
+
 ---
 Removing leading and trailing whitespaces promotes data consistency and integrity, enhances the user experience by preventing minor input mistakes, and improves data display and search operations. To implement this feature throughout your entire application, you can leverage the ModelBinder with its ModelBinderProvider.
 
