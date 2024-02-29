@@ -29,6 +29,7 @@ Consider the following HTML structure for cascaded dropdown lists:
 <div class="data-control">
     <label class="data-control-label">
         Academic Unit
+        <span asp-validation-for="AcademicUnitId" class="text-danger"></span>
     </label>
     <div class="data-control-element">
         <select asp-for="AcademicUnitId" asp-items="Model.AcademicUnits" class="form-control">
@@ -39,6 +40,7 @@ Consider the following HTML structure for cascaded dropdown lists:
 <div class="data-control">
     <label class="data-control-label">
         Academic Department
+        <span asp-validation-for="AcademicDepartmentId" class="text-danger"></span>
     </label>
     <div class="data-control-element">
         <select asp-for="AcademicDepartmentId" asp-items="Model.AcademicDepartments" class="form-control">
@@ -52,7 +54,7 @@ Implementing cascaded dropdown lists can be achieved with the following JavaScri
 ```javascript
 <script type="text/javascript">
     $(document).ready(function () {
-        function cascadedDropdownList(parentSelector, childSelector, url) {
+        function cascadedDropdownList(parentSelector, childSelector, url, selectedChildOption) {
             $(parentSelector).on('change', function () {
                 var parentId = $(this).val();
                 var childDropdown = $(childSelector);
@@ -71,10 +73,18 @@ Implementing cascaded dropdown lists can be achieved with the following JavaScri
                                 childDropdown.append(new Option(item.text, item.value));
                             });
 
-                            childDropdown.trigger('change');
+                            if (selectedChildOption) {
+                                childDropdown.val(selectedChildOption).trigger('change');
+                                selectedChildOption = null;
+                            }
+                            else {
+                                childDropdown.trigger('change');
+                            }
+
                             $.unblockUI();
                         },
-                        error: function () {
+                        error:  function (jqXHR, textStatus, errorThrown) {
+                            console.error(errorThrown);
                             $.unblockUI();
                         }
                     });
@@ -87,7 +97,7 @@ Implementing cascaded dropdown lists can be achieved with the following JavaScri
         }
 
         // Use nameof to prevent naming corruptions
-        cascadedDropdownList('#@nameof(Model.AcademicUnitId)', '#@nameof(Model.AcademicDepartmentId)', '@(Url.ActionDynamic<DepartmentController>(nameof(DepartmentController.AcademicDepartments)))');
+        cascadedDropdownList('#@nameof(Model.AcademicUnitId)', '#@nameof(Model.AcademicDepartmentId)', '@(Url.ActionDynamic<DepartmentController>(nameof(DepartmentController.AcademicDepartments)))', @Model.AcademicDepartmentId);
     });
 </script>
 ```

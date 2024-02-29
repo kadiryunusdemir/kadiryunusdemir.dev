@@ -40,6 +40,36 @@ public static class Extensions
     {
         return url.Action(action, typeof(T).Name).Replace(nameof(Controller), string.Empty);
     }
+
+    /// <summary>
+    /// Dynamically generates a URL for a controller action using compile-time checks.
+    /// </summary>
+    /// <param name="urlHelper">The IUrlHelper instance.</param>
+    /// <param name="nameOfAction">The name of the action using nameof syntax (e.g., nameof(Controller.Action)).</param>
+    /// <param name="fullTypeName">The full type name of the controller.</param>
+    /// <returns>The generated URL.</returns>
+    public static string ActionBuilder(this IUrlHelper urlHelper, string nameOfAction, [CallerArgumentExpression("nameOfAction")] string fullTypeName = "")
+    {
+        if (!fullTypeName.Contains("Controller"))
+        {
+            return string.Empty;
+        }
+
+        string[] array = fullTypeName
+            .Replace("nameof(", string.Empty)
+            .Replace("Controller", string.Empty)
+            .Replace(")", string.Empty)
+            .Split(".");
+        string controllerName = array[0];
+        string actionName = array.Length > 1 ? array[1] : string.Empty;
+
+        if (string.IsNullOrWhiteSpace(controllerName))
+        {
+            return string.Empty;
+        }
+
+        return urlHelper.Action(actionName, controllerName);
+    }
 }
 ```
 
@@ -49,5 +79,10 @@ Once you've added the extension methods, generating URLs becomes a breeze. Here'
 ```csharp
 Url.ActionBuilder(nameof(HomeController.Index))
 ```
+```html
+<a href="@(Url.ActionBuilder(nameof(HomeController.Index)))">Home Link</a>
+```
 
 By leveraging extension methods for compile-time URL control, you can significantly reduce the risk of runtime errors related to URL construction, leading to more robust and maintainable ASP.NET Core applications.
+
+>*Kudos to Mustafa Soysal for ActionBuilder.*
